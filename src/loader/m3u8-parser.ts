@@ -146,7 +146,7 @@ export default class M3U8Parser {
     return medias;
   }
 
-  static parseLevelPlaylist (string: string, baseurl: string, id: number, type: PlaylistLevelType, levelUrlId: number) {
+  static parseLevelPlaylist (string: string, baseurl: string, id: number, type: PlaylistLevelType, levelUrlId: number, hls) {
     let currentSN = 0;
     let totalduration = 0;
     let level = new Level(baseurl);
@@ -255,9 +255,11 @@ export default class M3U8Parser {
           const decryptparams = value1;
           const keyAttrs = new AttrList(decryptparams);
           const decryptmethod = keyAttrs.enumeratedString('METHOD');
-          const decrypturi = keyAttrs.URI;
           const decryptiv = keyAttrs.hexadecimalInteger('IV');
-
+          let decrypturi = keyAttrs.URI;
+          if (hls.isCustomerKey) {
+            decrypturi = hls.customerKeyUrl;
+          }
           if (decryptmethod) {
             levelkey = new LevelKey(baseurl, decrypturi);
             if ((decrypturi) && (['AES-128', 'SAMPLE-AES', 'SAMPLE-AES-CENC'].indexOf(decryptmethod) >= 0)) {

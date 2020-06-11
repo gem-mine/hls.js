@@ -101,8 +101,14 @@ class KeyLoader extends EventHandler {
       logger.error('after key load, decryptdata unset');
       return;
     }
-    this.decryptkey = frag.decryptdata.key = new Uint8Array(response.data as ArrayBuffer);
-
+    if (this.hls.isCustomerKey) {
+      response.data = JSON.parse(String.fromCharCode.apply(null, new Uint8Array(response.data as any)));
+      var key = this.hls.customerDecript((response.data as any).key, this.hls.customerSign);
+      var buffKey = this.hls.char2buf(key);
+      this.decryptkey = frag.decryptdata.key = new Uint8Array(buffKey);
+    } else {
+      this.decryptkey = frag.decryptdata.key = new Uint8Array(response.data as ArrayBuffer);
+    }
     // detach fragment loader on load success
     frag.loader = undefined;
     delete this.loaders[frag.type];

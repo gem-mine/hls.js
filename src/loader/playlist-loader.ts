@@ -346,7 +346,7 @@ class PlaylistLoader extends EventHandler {
     const levelId = Number.isFinite(level as number) ? level as number : levelUrlId;
 
     const levelType = PlaylistLoader.mapContextToLevelType(context);
-    const levelDetails = M3U8Parser.parseLevelPlaylist(response.data as string, url, levelId, levelType, levelUrlId);
+    const levelDetails = M3U8Parser.parseLevelPlaylist(response.data as string, url, levelId, levelType, levelUrlId, hls);
 
     // set stats on level structure
     // TODO(jstackhouse): why? mixing concerns, is it just treated as value bag?
