@@ -47,7 +47,7 @@ class KeyLoader extends EventHandler {
       logger.warn('Missing decryption data on fragment in onKeyLoading');
       return;
     }
-    console.log('on keyloading', frag.decryptdata.uri)
+
     // Load the key if the uri is different from previous one, or if the decrypt key has not yet been retrieved
     const uri = frag.decryptdata.uri;
     if (uri !== this.decrypturl || this.decryptkey === null) {
@@ -101,9 +101,9 @@ class KeyLoader extends EventHandler {
       logger.error('after key load, decryptdata unset');
       return;
     }
-    if (this.hls.isCustomerKey) {
+    if (this.hls.isCustomKey) {
       response.data = JSON.parse(String.fromCharCode.apply(null, new Uint8Array(response.data as any)));
-      const key = this.hls.customerDecrypt((response.data as any).key, this.hls.customerSign);
+      const key = this.hls.customDecrypt((response.data as any).key, this.hls.customSign);
       const buffKey = this.hls.char2buf(key);
       this.decryptkey = frag.decryptdata.key = new Uint8Array(buffKey);
     } else {
