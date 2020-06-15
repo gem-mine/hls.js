@@ -44,9 +44,10 @@ export default class Hls extends Observer {
   private media: HTMLMediaElement | null = null;
   private url: string | null = null;
   public isCustomerKey: boolean = false;
-  public customerDecript: any;
+  public customerDecrypt: any;
   public char2buf: any;
   public customerSign: any;
+  public customKey: any;
 
   /**
    * @type {string}
