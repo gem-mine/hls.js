@@ -65,6 +65,12 @@ class KeyLoader extends EventHandler {
       this.decrypturl = uri;
       this.decryptkey = null;
 
+      if (this.hls.customKey) {
+        this.decryptkey = frag.decryptdata.key = new Uint8Array(this.hls.customKey);
+        this.hls.trigger(Event.KEY_LOADED, { frag: frag });
+        return;
+      }
+
       const loaderContext: KeyLoaderContext = {
         url: uri,
         frag: frag,
@@ -101,14 +107,7 @@ class KeyLoader extends EventHandler {
       logger.error('after key load, decryptdata unset');
       return;
     }
-    if (this.hls.isCustomKey) {
-      response.data = JSON.parse(String.fromCharCode.apply(null, new Uint8Array(response.data as any)));
-      const key = this.hls.customDecrypt((response.data as any).key, this.hls.customSign);
-      const buffKey = this.hls.char2buf(key);
-      this.decryptkey = frag.decryptdata.key = new Uint8Array(buffKey);
-    } else {
-      this.decryptkey = frag.decryptdata.key = new Uint8Array(response.data as ArrayBuffer);
-    }
+    this.decryptkey = frag.decryptdata.key = new Uint8Array(response.data as ArrayBuffer);
     // detach fragment loader on load success
     frag.loader = undefined;
     delete this.loaders[frag.type];

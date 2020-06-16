@@ -257,9 +257,6 @@ export default class M3U8Parser {
           const decryptmethod = keyAttrs.enumeratedString('METHOD');
           const decryptiv = keyAttrs.hexadecimalInteger('IV');
           let decrypturi = keyAttrs.URI;
-          if (hls.isCustomKey) {
-            decrypturi = hls.customKeyUrl;
-          }
           if (decryptmethod) {
             levelkey = new LevelKey(baseurl, decrypturi);
             if ((decrypturi) && (['AES-128', 'SAMPLE-AES', 'SAMPLE-AES-CENC'].indexOf(decryptmethod) >= 0)) {
